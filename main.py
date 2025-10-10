@@ -51,7 +51,7 @@ else:
 drive_service = build('drive', 'v3', credentials=creds)
 
 def listar_imagens_na_pasta(pasta_id):
-    """Lista todas as imagens em uma pasta do Drive e retorna nomes sem extensão"""
+    """Lista todas as imagens em uma pasta do Drive"""
     try:
         print(f"Buscando na pasta ID: {pasta_id}")  # Debug
         
@@ -64,15 +64,7 @@ def listar_imagens_na_pasta(pasta_id):
         files = results.get('files', [])
         print(f"Encontrados {len(files)} arquivos")  # Debug
         
-        # Extrair apenas os nomes sem extensão
-        nomes_sem_extensao = []
-        for file in files:
-            nome_arquivo = file['name']
-            # Remove a extensão do arquivo (parte após o último ponto)
-            nome_sem_extensao = nome_arquivo.rsplit('.', 1)[0]
-            nomes_sem_extensao.append(nome_sem_extensao)
-        
-        return nomes_sem_extensao
+        return files
         
     except Exception as e:
         st.error(f"Erro ao acessar a pasta: {e}")
@@ -80,52 +72,30 @@ def listar_imagens_na_pasta(pasta_id):
 
 imagens = listar_imagens_na_pasta(st.secrets["id_imagens"])
 
-st.write(imagens)
+for imagem in imagens:
+    st.write(f"Imagem: {imagem['name']} - ID: {imagem['id']}")
 
 def baixar_imagem_por_nome(nome_imagem, pasta_id):
-    """Baixa uma imagem específica pelo nome (sem extensão) com busca inteligente"""
+    """Baixa uma imagem específica pelo nome da pasta do Drive"""
     try:
-        # Busca flexível por nome
-        query = f"'{pasta_id}' in parents and mimeType contains 'image/'"
+        # Buscar o arquivo pelo nome na pasta específica
+        query = f"'{pasta_id}' in parents and name='{nome_imagem}' and mimeType contains 'image/'"
         results = drive_service.files().list(
             q=query,
-            fields="files(id, name, mimeType)"
+            fields="files(id, name)"
         ).execute()
         
         files = results.get('files', [])
         
         if not files:
-            st.error(f"Nenhuma imagem encontrada na pasta")
+            st.error(f"Imagem '{nome_imagem}' não encontrada na pasta")
             return None
         
-        # Buscar a melhor correspondência
-        arquivo_correspondente = None
-        correspondencias_exatas = []
-        correspondencias_parciais = []
-        
-        for file in files:
-            nome_arquivo = file['name']
-            nome_base = nome_arquivo.rsplit('.', 1)[0]
-            
-            # Correspondência exata do nome base
-            if nome_base.lower() == nome_imagem.lower():
-                correspondencias_exatas.append(file)
-            # Correspondência parcial (contém o nome)
-            elif nome_imagem.lower() in nome_base.lower():
-                correspondencias_parciais.append(file)
-        
-        # Prioridade: 1. Exatas, 2. Parciais, 3. Primeiro arquivo
-        if correspondencias_exatas:
-            arquivo_correspondente = correspondencias_exatas[0]
-        elif correspondencias_parciais:
-            arquivo_correspondente = correspondencias_parciais[0]
-            st.warning(f"Usando '{arquivo_correspondente['name']}' para '{nome_imagem}'")
-        else:
-            arquivo_correspondente = files[0]
-            st.warning(f"Nenhuma correspondência exata. Usando '{arquivo_correspondente['name']}'")
+        # Pegar o primeiro resultado (deve ser único)
+        file_info = files[0]
         
         # Fazer o download
-        request = drive_service.files().get_media(fileId=arquivo_correspondente['id'])
+        request = drive_service.files().get_media(fileId=file_info['id'])
         fh = io.BytesIO()
         downloader = MediaIoBaseDownload(fh, request)
         
