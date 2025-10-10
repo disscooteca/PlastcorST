@@ -213,7 +213,7 @@ dados_Falta_completo = pd.DataFrame(dados_Falta_completo) #Colocando dados no fo
 dados_os_completo = pd.DataFrame(dados_os_completo) #Colocando dados no formato de dataframe
 
 ## Equipes ##
-equipes = dados_Quadro_completo["SETOR"].tolist()
+equipes = dados_Quadro_completo["SUBSETOR"].tolist()
 
 #Nomes das estampas
 nomes_estampas = nomes_sem_extensao
@@ -311,6 +311,7 @@ def create():
             st.markdown("---")
             equipes_filtradas = [e for e in equipes if e != "BORDADO"]
             st.write(equipes)
+            st.write(equipes_filtradas)
             equipe = st.radio("Qual equipe responsável?", equipes_filtradas)
 
             if estampa in estampas_bordado:
