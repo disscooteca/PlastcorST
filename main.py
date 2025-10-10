@@ -451,7 +451,7 @@ def create():
 
             cliente1 = st.text_input("Qual o nome do cliente 1?", value="")
 
-            equipes_filtradas = [e for e in equipes if e != "BORDADO"]
+            equipes_filtradas = [e for e in equipes if e.startswith("ESTAMPARIA")]
             equipe1 = st.radio("Qual equipe responsável pelo pedido 1?", equipes_filtradas)
 
             observacao1 = st.text_input("Observação modelo 1?", max_chars=200)
@@ -679,7 +679,7 @@ def create():
 
             cliente1 = st.text_input("Qual o nome do cliente 1?", value="")
 
-            equipes_filtradas = [e for e in equipes if e != "BORDADO"]
+            equipes_filtradas = [e for e in equipes if e.startswith("ESTAMPARIA")]
             equipe1 = st.radio("Qual equipe responsável pelo pedido 1?", equipes_filtradas)
 
             observacao1 = st.text_input("Observação modelo 1?", max_chars=200)
