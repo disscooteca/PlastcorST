@@ -150,7 +150,7 @@ def adicionar_imagem_ao_pdf(nome_imagem, pasta_id, pdf, x, y, largura):
         st.error(f"Erro ao adicionar '{nome_imagem}' ao PDF: {e}")
         return False
     
-def salvar_pdf_no_drive(pdf, nome_arquivo, pasta_shared_drive_id):
+def salvar_pdf_no_drive(pdf, nome_arquivo, pasta_id):
     """Salva PDF em Shared Drive (solução recomendada)"""
     try:
         # Salvar temporariamente
@@ -161,7 +161,7 @@ def salvar_pdf_no_drive(pdf, nome_arquivo, pasta_shared_drive_id):
         # Metadados
         file_metadata = {
             'name': nome_arquivo,
-            'parents': [pasta_shared_drive_id]
+            'parents': [pasta_id]
         }
         
         # Upload com suporte a Shared Drives
