@@ -150,40 +150,48 @@ def adicionar_imagem_ao_pdf(nome_imagem, pasta_id, pdf, x, y, largura):
         st.error(f"Erro ao adicionar '{nome_imagem}' ao PDF: {e}")
         return False
     
-def salvar_pdf_no_drive(pdf, nome_arquivo, pasta_id):
-    """Salva um PDF num Shared Drive do Google Drive"""
+def salvar_pdf_no_drive(pdf, nome_arquivo, pasta_shared_drive_id):
+    """Salva PDF em Shared Drive (solução recomendada)"""
     try:
-        # Salvar o PDF em um arquivo temporário
+        # Salvar temporariamente
         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
             pdf.output(temp_file.name)
             temp_path = temp_file.name
         
-        # Metadados do arquivo - ADICIONE supportsAllDrives=True
+        # Metadados
         file_metadata = {
             'name': nome_arquivo,
-            'parents': [pasta_id]
+            'parents': [pasta_shared_drive_id]
         }
         
-        # Fazer o upload com supportsAllDrives
-        media = MediaFileUpload(temp_path, mimetype='application/pdf')
+        # Upload com suporte a Shared Drives
+        media = MediaFileUpload(temp_path, mimetype='application/pdf', resumable=True)
+        
         file = drive_service.files().create(
             body=file_metadata,
             media_body=media,
-            supportsAllDrives=True,  # ← IMPORTANTE
-            fields='id, name, webViewLink'
+            supportsAllDrives=True,  # ← CRÍTICO
+            fields='id, name, webViewLink, webContentLink'
         ).execute()
         
-        # Limpar arquivo temporário
+        # Limpeza
         os.unlink(temp_path)
         
-        st.success(f"✅ PDF salvo no Drive: {file['name']}")
+        st.success(f"✅ OS salva com sucesso!")
+        st.write(f"**Arquivo:** {file['name']}")
+        
         if file.get('webViewLink'):
-            st.info(f"🔗 [Abrir PDF]({file['webViewLink']})")
+            st.markdown(f"**🔗 [Abrir no Drive]({file['webViewLink']})**")
         
         return file
         
     except Exception as e:
-        st.error(f"❌ Erro ao salvar PDF no Drive: {e}")
+        st.error(f"❌ Erro ao salvar: {e}")
+        # Debug adicional
+        st.write("⚠️ Certifique-se que:")
+        st.write("- O Shared Drive existe")
+        st.write("- A Service Account tem acesso como 'Editor'")
+        st.write("- Você está usando o ID correto do Shared Drive")
         return None
 
 client = gspread.authorize(creds) #Acessando sheets
