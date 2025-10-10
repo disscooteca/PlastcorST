@@ -389,11 +389,11 @@ def create():
 
                     try:
                         sucesso = adicionar_imagem_ao_pdf(
-                            nome_imagem=imagem,  # Nome SEM extensão
+                            nome_imagem=estampa,  # Nome SEM extensão
                             pasta_id=st.secrets["id_imagens"],
                             pdf=pdf,
-                            x=x_imagem2+2,
-                            y=y_imagem2+2, 
+                            x=x_imagem+2,
+                            y=y_imagem+2, 
                             largura=largura_imagem-4
                         )
 
