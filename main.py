@@ -309,9 +309,8 @@ def create():
             cliente = st.text_input("Qual o nome do cliente?")
 
             st.markdown("---")
-            equipes_filtradas = [e for e in equipes if e != "BORDADO"]
-            st.write(equipes)
-            st.write(equipes_filtradas)
+            equipes_filtradas = [e for e in equipes if e.startswith("ESTAMPARIA")]
+  
             equipe = st.radio("Qual equipe responsável?", equipes_filtradas)
 
             if estampa in estampas_bordado:
