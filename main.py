@@ -371,8 +371,7 @@ def create():
         try:
             imagem = baixar_imagem_por_nome(estampa2, st.secrets["id_imagens"])
             if imagem:
-
-                st.image(imagem, caption=estampa)   
+                st.image(imagem, caption=estampa2)   
 
         except:
             
