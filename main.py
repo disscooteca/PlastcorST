@@ -75,6 +75,50 @@ imagens = listar_imagens_na_pasta(st.secrets["id_imagens"])
 for imagem in imagens:
     st.write(f"Imagem: {imagem['name']} - ID: {imagem['id']}")
 
+def baixar_imagem_por_nome(nome_imagem, pasta_id):
+    """Baixa uma imagem específica pelo nome da pasta do Drive"""
+    try:
+        # Buscar o arquivo pelo nome na pasta específica
+        query = f"'{pasta_id}' in parents and name='{nome_imagem}' and mimeType contains 'image/'"
+        results = drive_service.files().list(
+            q=query,
+            fields="files(id, name)"
+        ).execute()
+        
+        files = results.get('files', [])
+        
+        if not files:
+            st.error(f"Imagem '{nome_imagem}' não encontrada na pasta")
+            return None
+        
+        # Pegar o primeiro resultado (deve ser único)
+        file_info = files[0]
+        
+        # Fazer o download
+        request = drive_service.files().get_media(fileId=file_info['id'])
+        fh = io.BytesIO()
+        downloader = MediaIoBaseDownload(fh, request)
+        
+        done = False
+        while not done:
+            status, done = downloader.next_chunk()
+        
+        fh.seek(0)
+        return Image.open(fh)
+        
+    except Exception as e:
+        st.error(f"Erro ao baixar imagem '{nome_imagem}': {e}")
+        return None
+    
+# Baixar imagem específica pelo nome
+imagem_x = baixar_imagem_por_nome("X.jpg", st.secrets["id_imagens"])
+if imagem_x:
+    st.image(imagem_x, caption="X.jpg", use_column_width=True)
+
+imagem_cafe = baixar_imagem_por_nome("café.jpg", st.secrets["id_imagens"])
+if imagem_cafe:
+    st.image(imagem_cafe, caption="café.jpg", use_column_width=True)
+
 client = gspread.authorize(creds) #Acessando sheets
 
 planilha_completa = client.open(
