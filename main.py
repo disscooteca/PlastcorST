@@ -361,9 +361,12 @@ def create():
             st.warning("modelo não encontrado para visualização")
 
         st.markdown("---")
+
         estampa2 = st.selectbox("Qual modelo de estampa 2?", nomes_estampas)
         if estampa2:
+            st.write(estampa2)
             estampa2 = mapeamento_estampas[estampa2]
+            st.write(estampa2)
 
         try:
             imagem = baixar_imagem_por_nome(estampa2, st.secrets["id_imagens"])
