@@ -113,11 +113,11 @@ def baixar_imagem_por_nome(nome_imagem, pasta_id):
 # Baixar imagem específica pelo nome
 imagem_x = baixar_imagem_por_nome("X.jpg", st.secrets["id_imagens"])
 if imagem_x:
-    st.image(imagem_x, caption="X.jpg", use_column_width=True)
+    st.image(imagem_x, caption="X.jpg", use_container_width=True)
 
 imagem_cafe = baixar_imagem_por_nome("café.jpg", st.secrets["id_imagens"])
 if imagem_cafe:
-    st.image(imagem_cafe, caption="café.jpg", use_column_width=True)
+    st.image(imagem_cafe, caption="café.jpg", use_container_width=True)
 
 client = gspread.authorize(creds) #Acessando sheets
 
