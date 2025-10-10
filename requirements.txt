@@ -11,8 +11,12 @@ fonttools==4.60.1
 fpdf2==2.8.4
 gitdb==4.0.12
 GitPython==3.1.45
+google-api-core==2.26.0
+google-api-python-client==2.184.0
 google-auth==2.41.1
+google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.2
+googleapis-common-protos==1.70.0
 gspread==6.2.1
 httplib2==0.31.0
 idna==3.10
@@ -28,6 +32,7 @@ packaging==25.0
 pandas==2.3.3
 pillow==11.3.0
 plotly==6.3.1
+proto-plus==1.26.1
 protobuf==6.32.1
 pyarrow==21.0.0
 pyasn1==0.6.1
@@ -49,5 +54,6 @@ toml==0.10.2
 tornado==6.5.2
 typing_extensions==4.15.0
 tzdata==2025.2
+uritemplate==4.2.0
 urllib3==2.5.0
 watchdog==6.0.0
