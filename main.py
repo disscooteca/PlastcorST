@@ -408,8 +408,6 @@ def create():
                         st.write(f"**Nome:** {arquivo_salvo['name']}")
                         if arquivo_salvo.get('webViewLink'):
                             st.write(f"**Link:** {arquivo_salvo['webViewLink']}")
-
-                #st.toast('Ordem de seviço criada!', icon='🎉')
     
     elif imprimir == "Imprimir 2 OS em uma folha":
 
