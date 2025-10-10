@@ -158,11 +158,6 @@ dados_os_completo = pd.DataFrame(dados_os_completo) #Colocando dados no formato 
 ## Equipes ##
 equipes = dados_Quadro_completo["SETOR"].tolist()
 
-# Pasta onde as imagens estão armazenadas
-PASTA_ESTAMPAS = "Estampas"
-
-extensoes_validas = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp')
-
 #Nomes das estampas
 nomes_estampas = nomes_sem_extensao
 
@@ -202,14 +197,6 @@ class ContadorSegundos:
 def mostrar_planilha(planilha):
     st.dataframe(planilha)
 
-def buscar_imagem(nome_base):
-    pasta = os.path.join(os.path.dirname(__file__), "Estampas")
-    for ext in [".jpg", ".png", '.jpeg', '.gif', '.bmp', '.webp']:
-        caminho = os.path.join(pasta, f"{nome_base}{ext}")
-        if os.path.exists(caminho):
-            return caminho
-    return None
-
 def create():
     st.header("Informe os dados da OS")
 
@@ -238,23 +225,32 @@ def create():
         estampa = st.selectbox("Qual modelo de estampa?", nomes_estampas)
 
         try:
-            imagem_estampa = Image.open(f"Estampas\{estampa}.jpg")
-            st.image(imagem_estampa)
+            imagem = baixar_imagem_por_nome(f"{estampa}.jpg", st.secrets["id_imagens"])
+            if imagem:
+
+                st.image(imagem, caption=f"{estampa}.jpg")   
 
         except:
             try:
-                imagem_estampa = Image.open(f"Estampas\{estampa}.png")
-                st.image(imagem_estampa)
+                imagem = baixar_imagem_por_nome(f"{estampa}.png", st.secrets["id_imagens"])
+                if imagem:
 
+                    st.image(imagem, caption=f"{estampa}.png")
+      
             except:
                 try:
-                    imagem_estampa = Image.open(f"Estampas\{estampa}.webp")
-                    st.image(imagem_estampa)
+                    imagem = baixar_imagem_por_nome(f"{estampa}.webp", st.secrets["id_imagens"])
+                    if imagem:
+
+                        st.image(imagem, caption=f"{estampa}.webp")
+                    
 
                 except:
                     try:
-                        imagem_estampa = Image.open(f"Estampas\{estampa}.jpeg")
-                        st.image(imagem_estampa)
+                        imagem = baixar_imagem_por_nome(f"{estampa}.jpeg", st.secrets["id_imagens"])
+                        if imagem:
+
+                            st.image(imagem, caption=f"{estampa}.jpeg")
 
                     except:
                         st.warning("modelo não encontrado para visualização")
@@ -341,26 +337,11 @@ def create():
                     # Desenha a borda grande
                     pdf.rect(x_imagem, y_imagem, largura_imagem, altura_imagem)    
 
-                    ## Colocar imagem na OS ##
-                    # imagem_path = buscar_imagem("b_flores")
-                    # if imagem_path:
                     try:
-                        pdf.image(f"Estampas\\{estampa}.jpg", x=x_imagem+2, y=y_imagem+2, w=largura_imagem-4)
+                        pdf.image(imagem, x=x_imagem+2, y=y_imagem+2, w=largura_imagem-4)
 
                     except:
-                        try:
-                            pdf.image(f"Estampas\\{estampa}.png", x=x_imagem+2, y=y_imagem+2, w=largura_imagem-4)
-
-                        except:
-                            try:
-                                pdf.image(f"Estampas\\{estampa}.webp", x=x_imagem+2, y=y_imagem+2, w=largura_imagem-4)
-
-                            except:
-                                try:
-                                    pdf.image(f"Estampas\\{estampa}.jpeg", x=x_imagem+2, y=y_imagem+2, w=largura_imagem-4)
-
-                                except:
-                                    st.warning("modelo não encontrado para visualização")
+                        st.warning("modelo não encontrado para visualização")
                     # else:
                     #     st.write("Imagem não encontrada")    
 
