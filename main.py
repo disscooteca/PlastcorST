@@ -72,6 +72,8 @@ def listar_imagens_na_pasta(pasta_id):
 
 imagens = listar_imagens_na_pasta(st.secrets["id_imagens"])
 
+st.write(imagens)
+
 for imagem in imagens:
     st.write(f"Imagem: {imagem['name']} - ID: {imagem['id']}")
 
