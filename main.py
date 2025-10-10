@@ -1431,8 +1431,14 @@ if pagina ==  "Estampas":
         nomes_estampas)
 
     st.title("Visualizador de Estampas") #Título da aplicação
-    imagem = Image.open(f"Estampas\{visual}")
-    st.image(imagem, caption=visual)
+
+    if visual:
+        visual = mapeamento_estampas[visual]
+
+    imagem = baixar_imagem_por_nome(visual, st.secrets["id_imagens"])
+    if imagem:
+
+        st.image(imagem, caption=visual)
 
 if pagina == "Fechar Ordem de Serviço":
     codigo_procurado = st.number_input("Qual ordem de serviço deseja fechar?", min_value=None, step=1)
