@@ -51,7 +51,7 @@ else:
 drive_service = build('drive', 'v3', credentials=creds)
 
 def listar_imagens_na_pasta(pasta_id):
-    """Lista todas as imagens em uma pasta do Drive"""
+    """Lista todas as imagens em uma pasta do Drive e retorna nomes sem extensão"""
     try:
         print(f"Buscando na pasta ID: {pasta_id}")  # Debug
         
@@ -64,7 +64,15 @@ def listar_imagens_na_pasta(pasta_id):
         files = results.get('files', [])
         print(f"Encontrados {len(files)} arquivos")  # Debug
         
-        return files
+        # Extrair apenas os nomes sem extensão
+        nomes_sem_extensao = []
+        for file in files:
+            nome_arquivo = file['name']
+            # Remove a extensão do arquivo (parte após o último ponto)
+            nome_sem_extensao = nome_arquivo.rsplit('.', 1)[0]
+            nomes_sem_extensao.append(nome_sem_extensao)
+        
+        return nomes_sem_extensao
         
     except Exception as e:
         st.error(f"Erro ao acessar a pasta: {e}")
