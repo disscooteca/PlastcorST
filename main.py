@@ -74,9 +74,11 @@ imagens = listar_imagens_na_pasta(st.secrets["id_imagens"])
 
 nomes_sem_extensao = [imagem['name'].rsplit('.', 1)[0] for imagem in imagens]
 
-nomes_com_extensao = [imagem['name'][0] for imagem in imagens]
+nomes_com_extensao = [imagem['name'] for imagem in imagens]
 
 nomes_com_b = [imagem['name'].rsplit('.', 1)[0] for imagem in imagens if imagem['name'].startswith('b_')]
+
+mapeamento_estampas = dict(zip(nomes_sem_extensao, nomes_com_extensao))
 
 st.write(imagens)
 st.write(nomes_sem_extensao)
@@ -227,36 +229,18 @@ def create():
         st.markdown("---")
         estampa = st.selectbox("Qual modelo de estampa?", nomes_estampas)
 
+        if estampa:
+            estampa = mapeamento_estampas[estampa]
+
         try:
-            imagem = baixar_imagem_por_nome(f"{estampa}.jpg", st.secrets["id_imagens"])
+            imagem = baixar_imagem_por_nome(estampa, st.secrets["id_imagens"])
             if imagem:
 
-                st.image(imagem, caption=f"{estampa}.jpg")   
+                st.image(imagem, caption=estampa)   
 
         except:
-            try:
-                imagem = baixar_imagem_por_nome(f"{estampa}.png", st.secrets["id_imagens"])
-                if imagem:
-
-                    st.image(imagem, caption=f"{estampa}.png")
-      
-            except:
-                try:
-                    imagem = baixar_imagem_por_nome(f"{estampa}.webp", st.secrets["id_imagens"])
-                    if imagem:
-
-                        st.image(imagem, caption=f"{estampa}.webp")
-                    
-
-                except:
-                    try:
-                        imagem = baixar_imagem_por_nome(f"{estampa}.jpeg", st.secrets["id_imagens"])
-                        if imagem:
-
-                            st.image(imagem, caption=f"{estampa}.jpeg")
-
-                    except:
-                        st.warning("modelo não encontrado para visualização")
+            
+            st.warning("modelo não encontrado para visualização")
 
         with st.form("AbrirOS"):
             
