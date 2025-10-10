@@ -378,7 +378,7 @@ def create():
                     )
 
                     # Posição para começar a coluna da direita
-                    x_imagem = 130  # posição horizontal
+                    x_imagem = 140  # posição horizontal
                     y_imagem = 18   # posição vertical
                     largura_imagem = 70
                     altura_imagem = 100
