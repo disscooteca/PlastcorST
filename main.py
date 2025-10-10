@@ -387,18 +387,14 @@ def create():
                     # Desenha a borda grande
                     pdf.rect(x_imagem, y_imagem, largura_imagem, altura_imagem)    
 
-                    try:
-                        sucesso = adicionar_imagem_ao_pdf(
-                            nome_imagem=estampa,  # Nome SEM extensão
-                            pasta_id=st.secrets["id_imagens"],
-                            pdf=pdf,
-                            x=x_imagem+2,
-                            y=y_imagem+2, 
-                            largura=largura_imagem-4
-                        )
-
-                    except:
-                        st.warning("modelo não encontrado para visualização")
+                    sucesso = adicionar_imagem_ao_pdf(
+                        nome_imagem=estampa.rsplit('.', 1)[0],  # Nome SEM extensão
+                        pasta_id=st.secrets["id_imagens"],
+                        pdf=pdf,
+                        x=x_imagem+2,
+                        y=y_imagem+2,
+                        largura=largura_imagem-4
+                    )
 
                     nome_arquivo_pdf = f"OS_{codigo}_{cliente}.pdf"
 
@@ -608,15 +604,20 @@ def create():
                     pdf.set_xy(10, 250)
                     
 
-                    pasta_base = os.path.dirname(__file__)
-                    caminho_pasta = os.path.join(pasta_base, "OS")
-
                     if cliente1 == cliente2:
-                        pdf.output(os.path.join(caminho_pasta, f"OS_{codigo}_{cliente2}.pdf"))
+                        nome_arquivo = f"OS_{codigo}_{cliente2}.pdf"
                     else:
-                        pdf.output(os.path.join(caminho_pasta, f"OS_{codigo}_{cliente1}_{cliente2}.pdf"))
+                        nome_arquivo = f"OS_{codigo}_{cliente1}_{cliente2}.pdf"
 
-                st.toast('Ordem de serviço criada!', icon='🎉')
+                    arquivo_salvo = salvar_pdf_no_drive(
+                        pdf=pdf,
+                        nome_arquivo=nome_arquivo,
+                        pasta_id=st.secrets["id_os"]
+                    )
+
+                    if arquivo_salvo:
+                        st.success("PDF salvo com sucesso no Google Drive!")
+
 
     elif imprimir ==  "Imprimir 3 OS em uma folha":
         st.markdown("---")
@@ -895,21 +896,25 @@ def create():
                                     pass
                     
 
-                    pasta_base = os.path.dirname(__file__)
-                    caminho_pasta = os.path.join(pasta_base, "OS")
-
-                    if cliente1 == cliente2:
-                        pdf.output(os.path.join(caminho_pasta, f"OS_{codigo}_{cliente2}.pdf"))
-                    elif cliente1 == cliente2 and cliente1 != cliente3:
-                        pdf.output(os.path.join(caminho_pasta, f"OS_{codigo}_{cliente1}_{cliente2}.pdf"))
-                    elif cliente3 == cliente2 and cliente1 != cliente3:
-                        pdf.output(os.path.join(caminho_pasta, f"OS_{codigo}_{cliente3}_{cliente2}.pdf"))
-                    elif cliente1 == cliente3 and cliente2 != cliente3:
-                        pdf.output(os.path.join(caminho_pasta, f"OS_{codigo}_{cliente1}_{cliente3}.pdf"))
+                    if cliente1 == cliente2 == cliente3:
+                        nome_arquivo = f"OS_{codigo}_{cliente1}.pdf"
+                    elif cliente1 == cliente2:
+                        nome_arquivo = f"OS_{codigo}_{cliente1}_{cliente3}.pdf"
+                    elif cliente2 == cliente3:
+                        nome_arquivo = f"OS_{codigo}_{cliente1}_{cliente2}.pdf"
+                    elif cliente1 == cliente3:
+                        nome_arquivo = f"OS_{codigo}_{cliente1}_{cliente2}.pdf"
                     else:
-                        pdf.output(os.path.join(caminho_pasta, f"OS_{codigo}_{cliente1}_{cliente2}_{cliente3}.pdf"))
+                        nome_arquivo = f"OS_{codigo}_{cliente1}_{cliente2}_{cliente3}.pdf"
 
-                st.toast('Ordem de serviço criada!', icon='🎉')
+                    arquivo_salvo = salvar_pdf_no_drive(
+                        pdf=pdf,
+                        nome_arquivo=nome_arquivo,
+                        pasta_id=st.secrets["id_os"]
+                    )
+
+                    if arquivo_salvo:
+                        st.success("PDF salvo com sucesso no Google Drive!")
 
 
 # Gerar dados fictícios de produção para o último mês
