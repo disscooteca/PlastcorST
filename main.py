@@ -74,10 +74,13 @@ imagens = listar_imagens_na_pasta(st.secrets["id_imagens"])
 
 nomes_sem_extensao = [imagem['name'].rsplit('.', 1)[0] for imagem in imagens]
 
+nomes_com_extensao = [imagem['name'][0] for imagem in imagens]
+
 nomes_com_b = [imagem['name'].rsplit('.', 1)[0] for imagem in imagens if imagem['name'].startswith('b_')]
 
 st.write(imagens)
 st.write(nomes_sem_extensao)
+st.write(nomes_com_extensao)
 st.write(nomes_com_b)
 
 for imagem in imagens:
