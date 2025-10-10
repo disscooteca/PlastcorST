@@ -345,53 +345,33 @@ def create():
     elif imprimir == "Imprimir 2 OS em uma folha":
         st.markdown("---")
         estampa1 = st.selectbox("Qual modelo de estampa 1?", nomes_estampas)
+        if estampa1:
+            estampa1 = mapeamento_estampas[estampa1]
 
         try:
-            imagem_estampa1 = Image.open(f"Estampas\{estampa1}.jpg")
-            st.image(imagem_estampa1)
+            imagem = baixar_imagem_por_nome(estampa1, st.secrets["id_imagens"])
+            if imagem:
+
+                st.image(imagem, caption=estampa1)   
 
         except:
-            try:
-                imagem_estampa1 = Image.open(f"Estampas\{estampa1}.png")
-                st.image(imagem_estampa1)
-
-            except:
-                try:
-                    imagem_estampa1 = Image.open(f"Estampas\{estampa1}.webp")
-                    st.image(imagem_estampa1)
-
-                except:
-                    try:
-                        imagem_estampa1 = Image.open(f"Estampas\{estampa1}.jpeg")
-                        st.image(imagem_estampa1)
-
-                    except:
-                        st.warning("modelo não encontrado para visualização")
+            
+            st.warning("modelo não encontrado para visualização")
 
         st.markdown("---")
         estampa2 = st.selectbox("Qual modelo de estampa 2?", nomes_estampas)
+        if estampa2:
+            estampa2 = mapeamento_estampas[estampa2]
 
         try:
-            imagem_estampa2 = Image.open(f"Estampas\{estampa2}.jpg")
-            st.image(imagem_estampa2)
+            imagem2 = baixar_imagem_por_nome(estampa2, st.secrets["id_imagens"])
+            if imagem2:
+
+                st.image(imagem2, caption=estampa)   
 
         except:
-            try:
-                imagem_estampa2 = Image.open(f"Estampas\{estampa2}.png")
-                st.image(imagem_estampa2)
-
-            except:
-                try:
-                    imagem_estampa2 = Image.open(f"Estampas\{estampa2}.webp")
-                    st.image(imagem_estampa2)
-
-                except:
-                    try:
-                        imagem_estampa2 = Image.open(f"Estampas\{estampa2}.jpeg")
-                        st.image(imagem_estampa2)
-
-                    except:
-                        st.warning("modelo não encontrado para visualização")
+            
+            st.warning("modelo não encontrado para visualização")
 
         with st.form("AbrirOS"):
             
