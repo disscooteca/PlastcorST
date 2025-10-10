@@ -151,24 +151,25 @@ def adicionar_imagem_ao_pdf(nome_imagem, pasta_id, pdf, x, y, largura):
         return False
     
 def salvar_pdf_no_drive(pdf, nome_arquivo, pasta_id):
-    """Salva um PDF numa pasta do Google Drive"""
+    """Salva um PDF num Shared Drive do Google Drive"""
     try:
         # Salvar o PDF em um arquivo temporário
         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
             pdf.output(temp_file.name)
             temp_path = temp_file.name
         
-        # Metadados do arquivo
+        # Metadados do arquivo - ADICIONE supportsAllDrives=True
         file_metadata = {
             'name': nome_arquivo,
             'parents': [pasta_id]
         }
         
-        # Fazer o upload
+        # Fazer o upload com supportsAllDrives
         media = MediaFileUpload(temp_path, mimetype='application/pdf')
         file = drive_service.files().create(
             body=file_metadata,
             media_body=media,
+            supportsAllDrives=True,  # ← IMPORTANTE
             fields='id, name, webViewLink'
         ).execute()
         
@@ -176,7 +177,8 @@ def salvar_pdf_no_drive(pdf, nome_arquivo, pasta_id):
         os.unlink(temp_path)
         
         st.success(f"✅ PDF salvo no Drive: {file['name']}")
-        st.info(f"🔗 Link: {file.get('webViewLink', 'Link não disponível')}")
+        if file.get('webViewLink'):
+            st.info(f"🔗 [Abrir PDF]({file['webViewLink']})")
         
         return file
         
@@ -389,12 +391,9 @@ def create():
 
                     except:
                         st.warning("modelo não encontrado para visualização")
-                    # else:
-                    #     st.write("Imagem não encontrada")    
 
                     nome_arquivo_pdf = f"OS_{codigo}_{cliente}.pdf"
 
-                    # Salvar no Google Drive
                     arquivo_salvo = salvar_pdf_no_drive(
                         pdf=pdf,
                         nome_arquivo=nome_arquivo_pdf,
