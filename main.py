@@ -52,14 +52,25 @@ drive_service = build('drive', 'v3', credentials=creds)
 
 def listar_imagens_na_pasta(pasta_id):
     """Lista todas as imagens em uma pasta do Drive"""
-    query = f"'{pasta_id}' in parents and mimeType contains 'image/'"
-    results = drive_service.files().list(
-        q=query,
-        fields="files(id, name)"
-    ).execute()
-    return results.get('files', [])
+    try:
+        print(f"Buscando na pasta ID: {pasta_id}")  # Debug
+        
+        query = f"'{pasta_id}' in parents and mimeType contains 'image/'"
+        results = drive_service.files().list(
+            q=query,
+            fields="files(id, name, mimeType)"
+        ).execute()
+        
+        files = results.get('files', [])
+        print(f"Encontrados {len(files)} arquivos")  # Debug
+        
+        return files
+        
+    except Exception as e:
+        st.error(f"Erro ao acessar a pasta: {e}")
+        return []
 
-imagens = listar_imagens_na_pasta("ID_DA_PASTA_ESTAMPAS")
+imagens = listar_imagens_na_pasta(st.secrets["id_imagens"])
 
 for imagem in imagens:
     st.write(f"Imagem: {imagem['name']} - ID: {imagem['id']}")
