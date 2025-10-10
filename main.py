@@ -575,7 +575,7 @@ def create():
 
                     # Área para imagem da segunda OS
                     x_imagem2 = 140
-                    y_imagem2 = 153
+                    y_imagem2 = 163
                     pdf.rect(x_imagem2, y_imagem2, largura_imagem, altura_imagem)
 
                     adicionar_imagem_ao_pdf(
