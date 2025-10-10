@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import tempfile
 from PIL import Image
 import pandas as pd
 import plotly.express as px
@@ -7,6 +8,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
+from googleapiclient.http import MediaFileUpload
 import io
 from fpdf import FPDF
 import datetime
@@ -121,6 +123,73 @@ def baixar_imagem_por_nome(nome_imagem, pasta_id):
         
     except Exception as e:
         st.error(f"Erro ao baixar imagem '{nome_imagem}': {e}")
+        return None
+    
+def adicionar_imagem_ao_pdf(nome_imagem, pasta_id, pdf, x, y, largura):
+    """Adiciona imagem baixada do Drive diretamente ao PDF"""
+    try:
+        # Baixar a imagem usando sua função existente
+        imagem_pil = baixar_imagem_por_nome(nome_imagem, pasta_id)
+        
+        if imagem_pil:
+            # Criar arquivo temporário
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as temp_file:
+                # Converter e salvar como JPEG
+                if imagem_pil.mode in ('RGBA', 'LA'):
+                    # Se tem transparência, converter para RGB
+                    background = Image.new('RGB', imagem_pil.size, (255, 255, 255))
+                    background.paste(imagem_pil, mask=imagem_pil.split()[-1])
+                    imagem_pil = background
+                
+                imagem_pil.save(temp_file, format='JPEG', quality=85)
+                temp_path = temp_file.name
+            
+            # Adicionar ao PDF
+            pdf.image(temp_path, x=x, y=y, w=largura)
+            
+            # Limpar arquivo temporário
+            os.unlink(temp_path)
+            return True
+        else:
+            st.error(f"Imagem '{nome_imagem}' não pôde ser baixada")
+            return False
+            
+    except Exception as e:
+        st.error(f"Erro ao adicionar '{nome_imagem}' ao PDF: {e}")
+        return False
+    
+def salvar_pdf_no_drive(pdf, nome_arquivo, pasta_id):
+    """Salva um PDF numa pasta do Google Drive"""
+    try:
+        # Salvar o PDF em um arquivo temporário
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
+            pdf.output(temp_file.name)
+            temp_path = temp_file.name
+        
+        # Metadados do arquivo
+        file_metadata = {
+            'name': nome_arquivo,
+            'parents': [pasta_id]
+        }
+        
+        # Fazer o upload
+        media = MediaFileUpload(temp_path, mimetype='application/pdf')
+        file = drive_service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields='id, name, webViewLink'
+        ).execute()
+        
+        # Limpar arquivo temporário
+        os.unlink(temp_path)
+        
+        st.success(f"✅ PDF salvo no Drive: {file['name']}")
+        st.info(f"🔗 Link: {file.get('webViewLink', 'Link não disponível')}")
+        
+        return file
+        
+    except Exception as e:
+        st.error(f"❌ Erro ao salvar PDF no Drive: {e}")
         return None
     
 # Baixar imagem específica pelo nome
@@ -325,22 +394,36 @@ def create():
                     pdf.rect(x_imagem, y_imagem, largura_imagem, altura_imagem)    
 
                     try:
-                        pdf.image(imagem, x=x_imagem+2, y=y_imagem+2, w=largura_imagem-4)
+                        sucesso = adicionar_imagem_ao_pdf(
+                            nome_imagem=imagem,  # Nome SEM extensão
+                            pasta_id=st.secrets["id_imagens"],
+                            pdf=pdf,
+                            x=x_imagem2+2,
+                            y=y_imagem2+2, 
+                            largura=largura_imagem-4
+                        )
 
                     except:
                         st.warning("modelo não encontrado para visualização")
                     # else:
                     #     st.write("Imagem não encontrada")    
 
-                    pasta_base = os.path.dirname(__file__)
+                    nome_arquivo_pdf = f"OS_{codigo}_{cliente}.pdf"
 
-                    # Caminho relativo para a pasta "OS"
-                    caminho_pasta = os.path.join(pasta_base, "OS")
+                    # Salvar no Google Drive
+                    arquivo_salvo = salvar_pdf_no_drive(
+                        pdf=pdf,
+                        nome_arquivo=nome_arquivo_pdf,
+                        pasta_id=st.secrets["id_os"]
+                    )
 
-                    # Salva o PDF na pasta "OS"
-                    pdf.output(os.path.join(caminho_pasta, f"OS_{codigo}_{cliente}.pdf"))
+                    if arquivo_salvo:
+                        st.success("PDF salvo com sucesso no Google Drive!")
+                        st.write(f"**Nome:** {arquivo_salvo['name']}")
+                        if arquivo_salvo.get('webViewLink'):
+                            st.write(f"**Link:** {arquivo_salvo['webViewLink']}")
 
-                st.toast('Ordem de seviço criada!', icon='🎉')
+                #st.toast('Ordem de seviço criada!', icon='🎉')
     
     elif imprimir == "Imprimir 2 OS em uma folha":
 
