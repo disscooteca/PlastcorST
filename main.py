@@ -318,7 +318,7 @@ def create():
             cliente = st.text_input("Qual o nome do cliente?")
 
             st.markdown("---")
-            equipes_filtradas = [e for e in equipes if e.startswith("ESTAMPARIA")]
+            equipes_filtradas = list(set([e for e in equipes if e.startswith("ESTAMPARIA")]))
   
             equipe = st.radio("Qual equipe responsável?", equipes_filtradas)
 
@@ -380,8 +380,8 @@ def create():
                     # Posição para começar a coluna da direita
                     x_imagem = 140  # posição horizontal
                     y_imagem = 18   # posição vertical
-                    largura_imagem = 70
-                    altura_imagem = 100
+                    largura_imagem = 50
+                    altura_imagem = 75
 
                     # Desenha a borda grande
                     pdf.rect(x_imagem, y_imagem, largura_imagem, altura_imagem)    
@@ -451,7 +451,7 @@ def create():
 
             cliente1 = st.text_input("Qual o nome do cliente 1?", value="")
 
-            equipes_filtradas = [e for e in equipes if e.startswith("ESTAMPARIA")]
+            equipes_filtradas = list(set([e for e in equipes if e.startswith("ESTAMPARIA")]))
             equipe1 = st.radio("Qual equipe responsável pelo pedido 1?", equipes_filtradas)
 
             observacao1 = st.text_input("Observação modelo 1?", max_chars=200)
@@ -665,7 +665,7 @@ def create():
 
             cliente1 = st.text_input("Qual o nome do cliente 1?", value="")
 
-            equipes_filtradas = [e for e in equipes if e.startswith("ESTAMPARIA")]
+            equipes_filtradas = list(set([e for e in equipes if e.startswith("ESTAMPARIA")]))
             equipe1 = st.radio("Qual equipe responsável pelo pedido 1?", equipes_filtradas)
 
             observacao1 = st.text_input("Observação modelo 1?", max_chars=200)
