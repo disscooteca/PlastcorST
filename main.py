@@ -525,8 +525,6 @@ def create():
                     # Área para imagem da primeira OS
                     x_imagem1 = 140
                     y_imagem1 = 18
-                    x_imagem2 = 140
-                    y_imagem2 = 173
                     largura_imagem = 50
                     altura_imagem = 75
 
@@ -577,7 +575,7 @@ def create():
 
                     # Área para imagem da segunda OS
                     x_imagem2 = 140
-                    y_imagem2 = 173
+                    y_imagem2 = 153
                     pdf.rect(x_imagem2, y_imagem2, largura_imagem, altura_imagem)
 
                     adicionar_imagem_ao_pdf(
