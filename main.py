@@ -85,8 +85,7 @@ mapeamento_estampas = dict(zip(nomes_sem_extensao, nomes_com_extensao))
 def baixar_imagem_por_nome(nome_imagem, pasta_id):
     """Baixa uma imagem específica pelo nome da pasta do Drive"""
     try:
-        # Buscar o arquivo pelo nome na pasta específica
-        query = f"'{pasta_id}' in parents and name='{nome_imagem}' and mimeType contains 'image/'"
+        query = f"'{pasta_id}' in parents and name contains '{nome_imagem}' and mimeType contains 'image/'"
         results = drive_service.files().list(
             q=query,
             fields="files(id, name)"
@@ -533,19 +532,23 @@ def create():
 
                     pdf.rect(x_imagem1, y_imagem1, largura_imagem, altura_imagem)
 
-                    try:
-                        pdf.image(f"Estampas\\{estampa1}.jpg", x=x_imagem1+2, y=y_imagem1+2, w=largura_imagem-4)
-                    except:
-                        try:
-                            pdf.image(f"Estampas\\{estampa1}.png", x=x_imagem1+2, y=y_imagem1+2, w=largura_imagem-4)
-                        except:
-                            try:
-                                pdf.image(f"Estampas\\{estampa1}.webp", x=x_imagem1+2, y=y_imagem1+2, w=largura_imagem-4)
-                            except:
-                                try:
-                                    pdf.image(f"Estampas\\{estampa1}.jpeg", x=x_imagem1+2, y=y_imagem1+2, w=largura_imagem-4)
-                                except:
-                                    pass
+                    adicionar_imagem_ao_pdf(
+                        nome_imagem=estampa1.rsplit('.', 1)[0], 
+                        pasta_id=st.secrets["id_imagens"], 
+                        pdf=pdf, 
+                        x=x_imagem1+2, 
+                        y=y_imagem1+2, 
+                        largura=largura_imagem-4
+                    )
+
+                    adicionar_imagem_ao_pdf(
+                        nome_imagem=estampa2.rsplit('.', 1)[0], 
+                        pasta_id=st.secrets["id_imagens"], 
+                        pdf=pdf, 
+                        x=x_imagem2+2, 
+                        y=y_imagem2+2, 
+                        largura=largura_imagem-4
+                    )
 
                     # Observação da primeira OS
                     pdf.set_xy(10, 95)
@@ -783,19 +786,9 @@ def create():
 
                     pdf.rect(x_imagem1, y_imagem1, largura_imagem, altura_imagem)
 
-                    try:
-                        pdf.image(f"Estampas\\{estampa1}.jpg", x=x_imagem1+2, y=y_imagem1+2, w=largura_imagem-4)
-                    except:
-                        try:
-                            pdf.image(f"Estampas\\{estampa1}.png", x=x_imagem1+2, y=y_imagem1+2, w=largura_imagem-4)
-                        except:
-                            try:
-                                pdf.image(f"Estampas\\{estampa1}.webp", x=x_imagem1+2, y=y_imagem1+2, w=largura_imagem-4)
-                            except:
-                                try:
-                                    pdf.image(f"Estampas\\{estampa1}.jpeg", x=x_imagem1+2, y=y_imagem1+2, w=largura_imagem-4)
-                                except:
-                                    pass                   
+                    adicionar_imagem_ao_pdf(estampa1.rsplit('.', 1)[0], st.secrets["id_imagens"], pdf, x_imagem1+2, y_imagem1+2, largura_imagem-4)
+                    adicionar_imagem_ao_pdf(estampa2.rsplit('.', 1)[0], st.secrets["id_imagens"], pdf, x_imagem2+2, y_imagem2+2, largura_imagem-4)
+                    adicionar_imagem_ao_pdf(estampa3.rsplit('.', 1)[0], st.secrets["id_imagens"], pdf, x_imagem3+2, y_imagem3+2, largura_imagem-4)                
 
                     # LINHA DIVISÓRIA (GUIA DE CORTE) - ALTERAÇÃO PRINCIPAL
                     pdf.set_draw_color(0, 0, 0)  # Cor preta
