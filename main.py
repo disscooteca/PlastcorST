@@ -310,7 +310,7 @@ def create():
 
             st.markdown("---")
             equipes_filtradas = [e for e in equipes if e != "BORDADO"]
-            st.write(equipes_filtradas)
+            st.write(equipes)
             equipe = st.radio("Qual equipe responsável?", equipes_filtradas)
 
             if estampa in estampas_bordado:
