@@ -343,8 +343,10 @@ def create():
                 st.toast('Ordem de seviço criada!', icon='🎉')
     
     elif imprimir == "Imprimir 2 OS em uma folha":
+
         st.markdown("---")
         estampa1 = st.selectbox("Qual modelo de estampa 1?", nomes_estampas)
+
         if estampa1:
             estampa1 = mapeamento_estampas[estampa1]
 
@@ -364,10 +366,10 @@ def create():
             estampa2 = mapeamento_estampas[estampa2]
 
         try:
-            imagem2 = baixar_imagem_por_nome(estampa2, st.secrets["id_imagens"])
-            if imagem2:
+            imagem = baixar_imagem_por_nome(estampa2, st.secrets["id_imagens"])
+            if imagem:
 
-                st.image(imagem2, caption=estampa)   
+                st.image(imagem, caption=estampa)   
 
         except:
             
