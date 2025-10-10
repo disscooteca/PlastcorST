@@ -82,30 +82,50 @@ imagens = listar_imagens_na_pasta(st.secrets["id_imagens"])
 
 st.write(imagens)
 
-for imagem in imagens:
-    st.write(f"Imagem: {imagem['name']} - ID: {imagem['id']}")
-
 def baixar_imagem_por_nome(nome_imagem, pasta_id):
-    """Baixa uma imagem específica pelo nome da pasta do Drive"""
+    """Baixa uma imagem específica pelo nome (sem extensão) com busca inteligente"""
     try:
-        # Buscar o arquivo pelo nome na pasta específica
-        query = f"'{pasta_id}' in parents and name='{nome_imagem}' and mimeType contains 'image/'"
+        # Busca flexível por nome
+        query = f"'{pasta_id}' in parents and mimeType contains 'image/'"
         results = drive_service.files().list(
             q=query,
-            fields="files(id, name)"
+            fields="files(id, name, mimeType)"
         ).execute()
         
         files = results.get('files', [])
         
         if not files:
-            st.error(f"Imagem '{nome_imagem}' não encontrada na pasta")
+            st.error(f"Nenhuma imagem encontrada na pasta")
             return None
         
-        # Pegar o primeiro resultado (deve ser único)
-        file_info = files[0]
+        # Buscar a melhor correspondência
+        arquivo_correspondente = None
+        correspondencias_exatas = []
+        correspondencias_parciais = []
+        
+        for file in files:
+            nome_arquivo = file['name']
+            nome_base = nome_arquivo.rsplit('.', 1)[0]
+            
+            # Correspondência exata do nome base
+            if nome_base.lower() == nome_imagem.lower():
+                correspondencias_exatas.append(file)
+            # Correspondência parcial (contém o nome)
+            elif nome_imagem.lower() in nome_base.lower():
+                correspondencias_parciais.append(file)
+        
+        # Prioridade: 1. Exatas, 2. Parciais, 3. Primeiro arquivo
+        if correspondencias_exatas:
+            arquivo_correspondente = correspondencias_exatas[0]
+        elif correspondencias_parciais:
+            arquivo_correspondente = correspondencias_parciais[0]
+            st.warning(f"Usando '{arquivo_correspondente['name']}' para '{nome_imagem}'")
+        else:
+            arquivo_correspondente = files[0]
+            st.warning(f"Nenhuma correspondência exata. Usando '{arquivo_correspondente['name']}'")
         
         # Fazer o download
-        request = drive_service.files().get_media(fileId=file_info['id'])
+        request = drive_service.files().get_media(fileId=arquivo_correspondente['id'])
         fh = io.BytesIO()
         downloader = MediaIoBaseDownload(fh, request)
         
