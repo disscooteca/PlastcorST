@@ -82,14 +82,6 @@ nomes_com_b = [imagem['name'].rsplit('.', 1)[0] for imagem in imagens if imagem[
 
 mapeamento_estampas = dict(zip(nomes_sem_extensao, nomes_com_extensao))
 
-st.write(imagens)
-st.write(nomes_sem_extensao)
-st.write(nomes_com_extensao)
-st.write(nomes_com_b)
-
-for imagem in imagens:
-    st.write(f"Imagem: {imagem['name']} - ID: {imagem['id']}")
-
 def baixar_imagem_por_nome(nome_imagem, pasta_id):
     """Baixa uma imagem específica pelo nome da pasta do Drive"""
     try:
@@ -191,15 +183,6 @@ def salvar_pdf_no_drive(pdf, nome_arquivo, pasta_id):
     except Exception as e:
         st.error(f"❌ Erro ao salvar PDF no Drive: {e}")
         return None
-    
-# Baixar imagem específica pelo nome
-imagem_x = baixar_imagem_por_nome("X.jpg", st.secrets["id_imagens"])
-if imagem_x:
-    st.image(imagem_x, caption="X.jpg")
-
-imagem_cafe = baixar_imagem_por_nome("café.jpg", st.secrets["id_imagens"])
-if imagem_cafe:
-    st.image(imagem_cafe, caption="café.jpg")
 
 client = gspread.authorize(creds) #Acessando sheets
 
@@ -327,6 +310,7 @@ def create():
 
             st.markdown("---")
             equipes_filtradas = [e for e in equipes if e != "BORDADO"]
+            st.write(equipes_filtradas)
             equipe = st.radio("Qual equipe responsável?", equipes_filtradas)
 
             if estampa in estampas_bordado:
