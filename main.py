@@ -5,6 +5,9 @@ import pandas as pd
 import plotly.express as px
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseDownload
+import io
 from fpdf import FPDF
 import datetime
 from fpdf.enums import Align
@@ -44,6 +47,22 @@ else:
         keyfile_dict=service_account_info,
         scopes=scopes
     )
+
+drive_service = build('drive', 'v3', credentials=creds)
+
+def listar_imagens_na_pasta(pasta_id):
+    """Lista todas as imagens em uma pasta do Drive"""
+    query = f"'{pasta_id}' in parents and mimeType contains 'image/'"
+    results = drive_service.files().list(
+        q=query,
+        fields="files(id, name)"
+    ).execute()
+    return results.get('files', [])
+
+imagens = listar_imagens_na_pasta("ID_DA_PASTA_ESTAMPAS")
+
+for imagem in imagens:
+    st.write(f"Imagem: {imagem['name']} - ID: {imagem['id']}")
 
 client = gspread.authorize(creds) #Acessando sheets
 
