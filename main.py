@@ -525,6 +525,8 @@ def create():
                     # Área para imagem da primeira OS
                     x_imagem1 = 140
                     y_imagem1 = 18
+                    x_imagem2 = 140
+                    y_imagem2 = 173
                     largura_imagem = 50
                     altura_imagem = 75
 
@@ -536,15 +538,6 @@ def create():
                         pdf=pdf, 
                         x=x_imagem1+2, 
                         y=y_imagem1+2, 
-                        largura=largura_imagem-4
-                    )
-
-                    adicionar_imagem_ao_pdf(
-                        nome_imagem=estampa2.rsplit('.', 1)[0], 
-                        pasta_id=st.secrets["id_imagens"], 
-                        pdf=pdf, 
-                        x=x_imagem2+2, 
-                        y=y_imagem2+2, 
                         largura=largura_imagem-4
                     )
 
@@ -587,19 +580,14 @@ def create():
                     y_imagem2 = 173
                     pdf.rect(x_imagem2, y_imagem2, largura_imagem, altura_imagem)
 
-                    try:
-                        pdf.image(f"Estampas\\{estampa2}.jpg", x=x_imagem2+2, y=y_imagem2+2, w=largura_imagem-4)
-                    except:
-                        try:
-                            pdf.image(f"Estampas\\{estampa2}.png", x=x_imagem2+2, y=y_imagem2+2, w=largura_imagem-4)
-                        except:
-                            try:
-                                pdf.image(f"Estampas\\{estampa2}.webp", x=x_imagem2+2, y=y_imagem2+2, w=largura_imagem-4)
-                            except:
-                                try:
-                                    pdf.image(f"Estampas\\{estampa2}.jpeg", x=x_imagem2+2, y=y_imagem2+2, w=largura_imagem-4)
-                                except:
-                                    pass
+                    adicionar_imagem_ao_pdf(
+                        nome_imagem=estampa2.rsplit('.', 1)[0], 
+                        pasta_id=st.secrets["id_imagens"], 
+                        pdf=pdf, 
+                        x=x_imagem2+2, 
+                        y=y_imagem2+2, 
+                        largura=largura_imagem-4
+                    )
 
                     # Observação da segunda OS
                     pdf.set_xy(10, 250)
@@ -784,9 +772,7 @@ def create():
 
                     pdf.rect(x_imagem1, y_imagem1, largura_imagem, altura_imagem)
 
-                    adicionar_imagem_ao_pdf(estampa1.rsplit('.', 1)[0], st.secrets["id_imagens"], pdf, x_imagem1+2, y_imagem1+2, largura_imagem-4)
-                    adicionar_imagem_ao_pdf(estampa2.rsplit('.', 1)[0], st.secrets["id_imagens"], pdf, x_imagem2+2, y_imagem2+2, largura_imagem-4)
-                    adicionar_imagem_ao_pdf(estampa3.rsplit('.', 1)[0], st.secrets["id_imagens"], pdf, x_imagem3+2, y_imagem3+2, largura_imagem-4)                
+                    adicionar_imagem_ao_pdf(estampa1.rsplit('.', 1)[0], st.secrets["id_imagens"], pdf, x_imagem1+2, y_imagem1+2, largura_imagem-4)            
 
                     # LINHA DIVISÓRIA (GUIA DE CORTE) - ALTERAÇÃO PRINCIPAL
                     pdf.set_draw_color(0, 0, 0)  # Cor preta
@@ -823,20 +809,14 @@ def create():
                     y_imagem2 = 103
                     pdf.rect(x_imagem2, y_imagem2, largura_imagem, altura_imagem)
 
-                    try:
-                        pdf.image(f"Estampas\\{estampa2}.jpg", x=x_imagem2+2, y=y_imagem2+2, w=largura_imagem-4)
-                    except:
-                        try:
-                            pdf.image(f"Estampas\\{estampa2}.png", x=x_imagem2+2, y=y_imagem2+2, w=largura_imagem-4)
-                        except:
-                            try:
-                                pdf.image(f"Estampas\\{estampa2}.webp", x=x_imagem2+2, y=y_imagem2+2, w=largura_imagem-4)
-                            except:
-                                try:
-                                    pdf.image(f"Estampas\\{estampa2}.jpeg", x=x_imagem2+2, y=y_imagem2+2, w=largura_imagem-4)
-                                except:
-                                    pass
-
+                    adicionar_imagem_ao_pdf(
+                        nome_imagem=estampa2.rsplit('.', 1)[0], 
+                        pasta_id=st.secrets["id_imagens"], 
+                        pdf=pdf, 
+                        x=x_imagem2+2, 
+                        y=y_imagem2+2, 
+                        largura=largura_imagem-4
+                    )
                     # LINHA DIVISÓRIA (GUIA DE CORTE) - ALTERAÇÃO PRINCIPAL
                     pdf.set_draw_color(0, 0, 0)  # Cor preta
                     pdf.set_line_width(0.5)  # Espessura da linha
@@ -872,20 +852,14 @@ def create():
                     y_imagem3 = 203
                     pdf.rect(x_imagem3, y_imagem3, largura_imagem, altura_imagem)
 
-                    try:
-                        pdf.image(f"Estampas\\{estampa3}.jpg", x=x_imagem3+2, y=y_imagem3+2, w=largura_imagem-4)
-                    except:
-                        try:
-                            pdf.image(f"Estampas\\{estampa3}.png", x=x_imagem3+2, y=y_imagem3+2, w=largura_imagem-4)
-                        except:
-                            try:
-                                pdf.image(f"Estampas\\{estampa3}.webp", x=x_imagem3+2, y=y_imagem3+2, w=largura_imagem-4)
-                            except:
-                                try:
-                                    pdf.image(f"Estampas\\{estampa3}.jpeg", x=x_imagem3+2, y=y_imagem3+2, w=largura_imagem-4)
-                                except:
-                                    pass
-                    
+                    adicionar_imagem_ao_pdf(
+                        nome_imagem=estampa3.rsplit('.', 1)[0], 
+                        pasta_id=st.secrets["id_imagens"], 
+                        pdf=pdf, 
+                        x=x_imagem3+2, 
+                        y=y_imagem3+2, 
+                        largura=largura_imagem-4
+                    )
 
                     if cliente1 == cliente2 == cliente3:
                         nome_arquivo = f"OS_{codigo}_{cliente1}.pdf"
