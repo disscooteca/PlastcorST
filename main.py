@@ -364,9 +364,7 @@ def create():
 
         estampa2 = st.selectbox("Qual modelo de estampa 2?", nomes_estampas)
         if estampa2:
-            st.write(estampa2)
             estampa2 = mapeamento_estampas[estampa2]
-            st.write(estampa2)
 
         try:
             imagem = baixar_imagem_por_nome(estampa2, st.secrets["id_imagens"])
@@ -550,77 +548,51 @@ def create():
         st.markdown("---")
         estampa1 = st.selectbox("Qual modelo de estampa 1?", nomes_estampas)
 
+        if estampa1:
+            estampa1 = mapeamento_estampas[estampa1]
+
         try:
-            imagem_estampa1 = Image.open(f"Estampas\{estampa1}.jpg")
-            st.image(imagem_estampa1)
+            imagem = baixar_imagem_por_nome(estampa1, st.secrets["id_imagens"])
+            if imagem:
+
+                st.image(imagem, caption=estampa1)   
 
         except:
-            try:
-                imagem_estampa1 = Image.open(f"Estampas\{estampa1}.png")
-                st.image(imagem_estampa1)
-
-            except:
-                try:
-                    imagem_estampa1 = Image.open(f"Estampas\{estampa1}.webp")
-                    st.image(imagem_estampa1)
-
-                except:
-                    try:
-                        imagem_estampa1 = Image.open(f"Estampas\{estampa1}.jpeg")
-                        st.image(imagem_estampa1)
-
-                    except:
-                        st.warning("modelo não encontrado para visualização")
+            
+            st.warning("modelo não encontrado para visualização")
 
         st.markdown("---")
         estampa2 = st.selectbox("Qual modelo de estampa 2?", nomes_estampas)
 
+        if estampa2:
+            estampa2 = mapeamento_estampas[estampa2]
+
         try:
-            imagem_estampa2 = Image.open(f"Estampas\{estampa2}.jpg")
-            st.image(imagem_estampa2)
+            imagem = baixar_imagem_por_nome(estampa2, st.secrets["id_imagens"])
+            if imagem:
+
+                st.image(imagem, caption=estampa2)   
 
         except:
-            try:
-                imagem_estampa2 = Image.open(f"Estampas\{estampa2}.png")
-                st.image(imagem_estampa2)
+            
+            st.warning("modelo não encontrado para visualização")
 
-            except:
-                try:
-                    imagem_estampa2 = Image.open(f"Estampas\{estampa2}.webp")
-                    st.image(imagem_estampa2)
-
-                except:
-                    try:
-                        imagem_estampa2 = Image.open(f"Estampas\{estampa2}.jpeg")
-                        st.image(imagem_estampa2)
-
-                    except:
-                        st.warning("modelo não encontrado para visualização")
-
+        
         st.markdown("---")
         estampa3 = st.selectbox("Qual modelo de estampa 3?", nomes_estampas)
 
+        if estampa3:
+            estampa3 = mapeamento_estampas[estampa3]
+
         try:
-            imagem_estampa3 = Image.open(f"Estampas\{estampa3}.jpg")
-            st.image(imagem_estampa3)
+            imagem = baixar_imagem_por_nome(estampa3, st.secrets["id_imagens"])
+            if imagem:
+
+                st.image(imagem, caption=estampa3)   
 
         except:
-            try:
-                imagem_estampa3 = Image.open(f"Estampas\{estampa3}.png")
-                st.image(imagem_estampa3)
-
-            except:
-                try:
-                    imagem_estampa3 = Image.open(f"Estampas\{estampa3}.webp")
-                    st.image(imagem_estampa3)
-
-                except:
-                    try:
-                        imagem_estampa3 = Image.open(f"Estampas\{estampa3}.jpeg")
-                        st.image(imagem_estampa3)
-
-                    except:
-                        st.warning("modelo não encontrado para visualização")
+            
+            st.warning("modelo não encontrado para visualização")
 
         with st.form("AbrirOS"):
             
