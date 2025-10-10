@@ -74,8 +74,11 @@ imagens = listar_imagens_na_pasta(st.secrets["id_imagens"])
 
 nomes_sem_extensao = [imagem['name'].rsplit('.', 1)[0] for imagem in imagens]
 
+nomes_com_b = [imagem['name'].rsplit('.', 1)[0] for imagem in imagens if imagem['name'].startswith('b_')]
+
 st.write(imagens)
 st.write(nomes_sem_extensao)
+st.write(nomes_com_b)
 
 for imagem in imagens:
     st.write(f"Imagem: {imagem['name']} - ID: {imagem['id']}")
@@ -160,23 +163,11 @@ PASTA_ESTAMPAS = "Estampas"
 
 extensoes_validas = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp')
 
-# Lista apenas arquivos com as extensões especificadas
-arquivos_imagens = [
-    f for f in os.listdir(PASTA_ESTAMPAS)
-    if f.lower().endswith(extensoes_validas)
-]  
-
-# Lista apenas arquivos com prefixo "b_" e extensões válidas
-arquivos_bordado = [
-    f for f in os.listdir(PASTA_ESTAMPAS)
-    if f.lower().startswith("b_") and f.lower().endswith(extensoes_validas)
-]
-
 #Nomes das estampas
-nomes_estampas = [os.path.splitext(f)[0] for f in arquivos_imagens]
+nomes_estampas = nomes_sem_extensao
 
 #Estampas com bordado
-estampas_bordado = [os.path.splitext(f)[0] for f in arquivos_bordado]
+estampas_bordado = nomes_com_b
 
 if 'rotation' not in st.session_state:
     st.session_state['rotation'] = "a"
@@ -1471,7 +1462,7 @@ if pagina ==  "Estampas":
     #Select bar para mostrar estampa
     visual = st.sidebar.selectbox(
         "Escolha um modelo de estampas", 
-        arquivos_imagens)
+        nomes_estampas)
 
     st.title("Visualizador de Estampas") #Título da aplicação
     imagem = Image.open(f"Estampas\{visual}")
