@@ -955,8 +955,8 @@ def gerar_dados_producao(periodo):
 
         @st.fragment
         def rotacion():
-            delay = 5
-            repeticao = 10
+            delay = 15
+            repeticao = 100
             texto_placeholder1 = st.empty()
             texto_placeholder2 = st.empty()
 
