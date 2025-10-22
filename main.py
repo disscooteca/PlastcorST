@@ -906,7 +906,25 @@ def gerar_dados_producao(periodo):
         )
         st.plotly_chart(fig_pizza, use_container_width=True)
 
+        st.subheader(f"Distribuição por Subsetor - Mês {periodo}")
+
+        for setor in dados_filtrados['SETOR'].unique():
+            dados_setor = dados_filtrados[dados_filtrados['SETOR'] == setor]
+            producao_subsetor = dados_setor.groupby('SUBSETOR')['TOTAL'].sum().reset_index()
+            
+            fig_bar = px.bar(
+                producao_subsetor,
+                y='TOTAL',
+                x='SUBSETOR',
+                title=f"Distribuição por Subsetor - {setor}",
+                color="SUBSETOR",
+                color_discrete_sequence=px.colors.qualitative.Bold
+            )
+            st.plotly_chart(fig_bar, use_container_width=True)
+
         i = 0
+
+        st.subheader(f"Distribuição por Setor ao longo do tempo- Mês {periodo}")
 
         for setor in dados_filtrados['SETOR'].unique():
             dados_setor = producao_diaria_setor[producao_diaria_setor['SETOR'] == setor]
@@ -924,22 +942,7 @@ def gerar_dados_producao(periodo):
             st.plotly_chart(fig_linha, use_container_width=True)
             i+=1
 
-        # Opção 3: Gráfico de pizza por subsetor dentro de cada setor
-        st.subheader(f"Distribuição por Subsetor - Mês {periodo}")
-
-        for setor in dados_filtrados['SETOR'].unique():
-            dados_setor = dados_filtrados[dados_filtrados['SETOR'] == setor]
-            producao_subsetor = dados_setor.groupby('SUBSETOR')['TOTAL'].sum().reset_index()
-            
-            fig_pizza = px.bar(
-                producao_subsetor,
-                y='TOTAL',
-                x='SUBSETOR',
-                title=f"Distribuição por Subsetor - {setor}",
-                color="SUBSETOR",
-                color_discrete_sequence=px.colors.qualitative.Bold
-            )
-            st.plotly_chart(fig_pizza, use_container_width=True)
+        
     
     else:
         dados_periodo = dados_Producao_completo.copy()
