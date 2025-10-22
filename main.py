@@ -987,30 +987,31 @@ def gerar_dados_producao(periodo):
                 st.plotly_chart(fig_pizza, use_container_width=True)
 
             for k in range(repeticao):
-                i = 0
-                for setor in dados_filtrados['SETOR'].unique():
+                #Dados no tempo (por dia)
+            #     i = 0
+            #     for setor in dados_filtrados['SETOR'].unique():
     
-                    with texto_placeholder2.container():
-                        dados_setor = producao_diaria_setor[producao_diaria_setor['SETOR'] == setor]
+            #         with texto_placeholder2.container():
+            #             dados_setor = producao_diaria_setor[producao_diaria_setor['SETOR'] == setor]
 
-                        fig_linha = px.line(
-                            dados_setor,
-                            x='DATA_DT',
-                            y='TOTAL',
-                            title=f"Produção - {setor}",
-                            markers = True,
-                            labels={"TOTAL": "Unidades Produzidas", "DATA_DT": "Data"},
-                            color_discrete_sequence=[px.colors.qualitative.G10[i % len(px.colors.qualitative.G10)]],
-                            height=530
-                        )
-                        fig_linha.update_layout(xaxis_tickformat='%d/%m')
-                        st.plotly_chart(fig_linha, use_container_width=True, key=f"chart_{k}.{i}.a")
-                        i += 1
+            #             fig_linha = px.line(
+            #                 dados_setor,
+            #                 x='DATA_DT',
+            #                 y='TOTAL',
+            #                 title=f"Produção - {setor}",
+            #                 markers = True,
+            #                 labels={"TOTAL": "Unidades Produzidas", "DATA_DT": "Data"},
+            #                 color_discrete_sequence=[px.colors.qualitative.G10[i % len(px.colors.qualitative.G10)]],
+            #                 height=530
+            #             )
+            #             fig_linha.update_layout(xaxis_tickformat='%d/%m')
+            #             st.plotly_chart(fig_linha, use_container_width=True, key=f"chart_{k}.{i}.a")
+            #             i += 1
 
                                     
-                    for j in range(delay):
+            #         for j in range(delay):
                 
-                        time.sleep(1)
+            #             time.sleep(1)   
 
                 i = 0
                 for setor in dados_filtrados['SETOR'].unique():
